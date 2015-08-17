@@ -32,6 +32,12 @@ type Result struct{
 }
 
 type Token struct{
+	// Number is used to indicate the type of a token
+	// and will appear in the Result structure.
+	//
+	// Number = 0    : don't push the token.
+	// Number = -int : don't push subsequent occurences of a token.
+	//                 Result.Number will store -Number, so Result.Number>0.
 	Number int
 	Regexp string
 }
@@ -41,6 +47,8 @@ type rule struct{
 }
 
 type Ruleset []rule
+
+// Compile a set of tokens into a Ruleset.
 func Compile(t []Token) (rs Ruleset,err error) {
 	rs = make(Ruleset,len(t))
 	for i,tt := range t {
@@ -50,6 +58,8 @@ func Compile(t []Token) (rs Ruleset,err error) {
 	}
 	return
 }
+
+// Parse a string using the Ruleset.
 func (r Ruleset) Parse(txt string) (res []Result,err error) {
 	var fi []int
 	var num int
